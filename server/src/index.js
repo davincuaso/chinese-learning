@@ -25,6 +25,15 @@ app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/sessions', require('./routes/sessions'));
 app.use('/api/tts', require('./routes/tts'));
 
+app.get('/', (req, res) => {
+  res.type('html').send(`
+    <h1>Chinese Learning API</h1>
+    <p>API server is running on port ${PORT}.</p>
+    <p>Frontend dev server: <a href="http://localhost:5173">http://localhost:5173</a></p>
+    <p>Health check: <a href="/api/health">/api/health</a></p>
+  `);
+});
+
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
 app.listen(PORT, async () => {
