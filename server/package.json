@@ -5,9 +5,10 @@
   "main": "src/index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon -L --watch src --ext js,mjs,cjs,json src/index.js",
     "start": "node src/index.js",
     "seed": "node src/seed/seed.js",
+    "seed:reset": "node src/seed/seed.js --reset",
     "download-cedict": "node src/seed/download-cedict.js"
   },
   "dependencies": {

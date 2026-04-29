@@ -7,6 +7,7 @@ const fs = require('fs');
 
 const DB_PATH = path.join(__dirname, '../../data/chinese_learning.db');
 const CEDICT_PATH = path.join(__dirname, '../../data/cedict_parsed.json');
+const shouldReset = process.argv.includes('--reset');
 
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 
@@ -181,7 +182,14 @@ const insertCard = db.prepare(`
   INSERT OR IGNORE INTO cards (hanzi, pinyin, meanings, hsk_level, examples, components, tags)
   VALUES (?, ?, ?, ?, ?, ?, ?)
 `);
+const countCards = db.prepare(`SELECT COUNT(*) AS count FROM cards`);
 
+if (shouldReset) {
+  console.log('Reset mode enabled: clearing decks and cards...');
+  db.exec('DELETE FROM user_card_progress; DELETE FROM cards; DELETE FROM decks;');
+}
+
+const beforeTotal = countCards.get().count;
 let totalInserted = 0;
 
 for (const [level, words] of Object.entries(HSK_WORDS)) {
@@ -209,9 +217,19 @@ for (const [level, words] of Object.entries(HSK_WORDS)) {
     if (result.changes > 0) levelCount++;
   }
 
-  console.log(`HSK ${hskLevel}: inserted ${levelCount}/${words.length} cards`);
+  console.log(`HSK ${hskLevel}: inserted ${levelCount}/${words.length} new cards`);
   totalInserted += levelCount;
 }
 
-console.log(`\nSeed complete! Total cards: ${totalInserted}`);
+const afterTotal = countCards.get().count;
+console.log(`\nSeed complete!`);
+console.log(`New cards inserted this run: ${totalInserted}`);
+console.log(`Total cards in database: ${afterTotal}`);
+if (!shouldReset && totalInserted === 0 && afterTotal > 0) {
+  console.log('No new cards were inserted because the database is already seeded.');
+  console.log('Use "npm run seed:reset" for a fresh rebuild.');
+}
+if (beforeTotal === 0 && afterTotal === 0) {
+  console.log('Warning: database is still empty. Check src/seed/hsk-words.js and seed logs above.');
+}
 db.close();

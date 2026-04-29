@@ -185,7 +185,9 @@ HSK 4: inserted 170/170 cards
 HSK 5: inserted 123/123 cards
 HSK 6: inserted 126/126 cards
 
-Seed complete! Total cards: 966
+Seed complete!
+New cards inserted this run: 966
+Total cards in database: 966
 ```
 
 > **Already done?** If you downloaded this project and `server/data/chinese_learning.db` already exists, you can skip this step. Re-running seed is safe — it uses `INSERT OR IGNORE` so no duplicate cards are created.
@@ -351,7 +353,17 @@ taskkill /PID <PID> /F
 
 ### Database is empty after seeding
 
-Make sure you ran `npm run seed` from the `server/` directory, not the project root. The database is created at `server/data/chinese_learning.db`.
+`npm run seed` now reports both "new cards inserted this run" and "total cards in database".
+
+- If **new cards is 0** but **total cards is 966**, this is healthy: your DB is already seeded.
+- If **total cards is 0**, run a full reset:
+
+```bash
+cd server
+npm run seed:reset
+```
+
+The SQLite file is created at `server/data/chinese_learning.db`.
 
 ### Cards show `[汉字]` as the definition
 
