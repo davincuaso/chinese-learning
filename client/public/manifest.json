@@ -1,0 +1,18 @@
+{
+  "name": "HSK Chinese Vocabulary",
+  "short_name": "汉字学习",
+  "description": "HSK 1–6 Chinese vocabulary with spaced repetition",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f7f4",
+  "theme_color": "#ef4444",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/hanzi-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

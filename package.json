@@ -1,0 +1,17 @@
+{
+  "name": "chinese-learning",
+  "version": "1.0.0",
+  "description": "HSK Chinese vocabulary learning app",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\" --names \"API,UI\" --prefix-colors \"cyan,magenta\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "seed": "cd server && npm run seed",
+    "download-cedict": "cd server && npm run download-cedict",
+    "build": "cd client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

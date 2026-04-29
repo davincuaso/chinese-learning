@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --card-front-bg: #ffffff;
+    --card-back-bg: #fefefe;
+  }
+
+  .dark {
+    --card-front-bg: #1e1e2e;
+    --card-back-bg: #181825;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased bg-ink-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200;
+    min-height: 100dvh;
+  }
+
+  * {
+    @apply box-border;
+  }
+}
+
+@layer components {
+  .card-3d {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+  }
+
+  .card-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+  }
+
+  .hanzi-large {
+    @apply font-chinese text-8xl md:text-9xl font-bold leading-none select-none;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  .rating-btn {
+    @apply flex-1 py-3 px-2 rounded-xl font-semibold text-sm transition-all duration-150
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-1;
+  }
+
+  .btn-again {
+    @apply rating-btn bg-red-100 text-red-700 hover:bg-red-200 focus:ring-red-400
+           dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50;
+  }
+
+  .btn-hard {
+    @apply rating-btn bg-orange-100 text-orange-700 hover:bg-orange-200 focus:ring-orange-400
+           dark:bg-orange-900/30 dark:text-orange-300 dark:hover:bg-orange-900/50;
+  }
+
+  .btn-good {
+    @apply rating-btn bg-green-100 text-green-700 hover:bg-green-200 focus:ring-green-400
+           dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-900/50;
+  }
+
+  .btn-easy {
+    @apply rating-btn bg-blue-100 text-blue-700 hover:bg-blue-200 focus:ring-blue-400
+           dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50;
+  }
+
+  .hsk-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide;
+  }
+
+  .surface {
+    @apply bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800;
+  }
+}
+
+/* Stroke writer container */
+.hanzi-writer-container svg {
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.1));
+}
+
+.dark .hanzi-writer-container svg {
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { @apply bg-transparent; }
+::-webkit-scrollbar-thumb { @apply bg-gray-300 dark:bg-gray-700 rounded-full; }
