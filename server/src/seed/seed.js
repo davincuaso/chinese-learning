@@ -136,20 +136,25 @@ const PINYIN_FALLBACK = {
   "学习": "xuéxí", "工作": "gōngzuò", "朋友": "péngyou", "家": "jiā",
 };
 
-function generateExamples(hanzi, meanings) {
+function generateExamples(hanzi, meanings, pinyin) {
   // Return built-in examples if available
   if (EXAMPLE_SENTENCES[hanzi]) return EXAMPLE_SENTENCES[hanzi];
 
-  // Generate a simple template example
-  const meaning = meanings[0] || hanzi;
-  const simpleWord = meaning.split('/')[0].split('(')[0].trim().split(' ').slice(0, 2).join(' ');
+  // Generate natural fallback examples when no curated sentence exists
+  const wordPinyin = pinyin || hanzi;
+  const firstMeaning = (meanings[0] || hanzi).split('/')[0].split('(')[0].trim();
 
   return [
     {
-      chinese: `这个词是"${hanzi}"。`,
-      pinyin: `Zhège cí shì "${hanzi}".`,
-      english: `This word is "${simpleWord}".`
-    }
+      chinese: `我想更好地理解“${hanzi}”这个词。`,
+      pinyin: `Wǒ xiǎng gèng hǎo de lǐjiě "${wordPinyin}" zhège cí.`,
+      english: `I want to better understand the word "${firstMeaning || hanzi}".`
+    },
+    {
+      chinese: `老师让我们用“${hanzi}”造句。`,
+      pinyin: `Lǎoshī ràng wǒmen yòng "${wordPinyin}" zàojù.`,
+      english: `The teacher asked us to make a sentence with "${firstMeaning || hanzi}".`
+    },
   ];
 }
 
@@ -179,8 +184,14 @@ const insertDeck = db.prepare(`
   INSERT OR IGNORE INTO decks (hsk_level, name) VALUES (?, ?)
 `);
 const insertCard = db.prepare(`
-  INSERT OR IGNORE INTO cards (hanzi, pinyin, meanings, hsk_level, examples, components, tags)
+  INSERT INTO cards (hanzi, pinyin, meanings, hsk_level, examples, components, tags)
   VALUES (?, ?, ?, ?, ?, ?, ?)
+  ON CONFLICT(hanzi, hsk_level) DO UPDATE SET
+    pinyin = excluded.pinyin,
+    meanings = excluded.meanings,
+    examples = excluded.examples,
+    components = excluded.components,
+    tags = excluded.tags
 `);
 const countCards = db.prepare(`SELECT COUNT(*) AS count FROM cards`);
 
@@ -190,7 +201,7 @@ if (shouldReset) {
 }
 
 const beforeTotal = countCards.get().count;
-let totalInserted = 0;
+let totalSynced = 0;
 
 for (const [level, words] of Object.entries(HSK_WORDS)) {
   const hskLevel = parseInt(level);
@@ -201,7 +212,7 @@ for (const [level, words] of Object.entries(HSK_WORDS)) {
     const entry = cedict[hanzi];
     const pinyin = entry?.pinyin || PINYIN_FALLBACK[hanzi] || hanzi;
     const meanings = entry?.meanings || [`[${hanzi}]`];
-    const examples = generateExamples(hanzi, meanings);
+    const examples = generateExamples(hanzi, meanings, pinyin);
     const components = getComponents(hanzi);
     const tags = [`hsk${hskLevel}`];
 
@@ -217,15 +228,17 @@ for (const [level, words] of Object.entries(HSK_WORDS)) {
     if (result.changes > 0) levelCount++;
   }
 
-  console.log(`HSK ${hskLevel}: inserted ${levelCount}/${words.length} new cards`);
-  totalInserted += levelCount;
+  console.log(`HSK ${hskLevel}: synced ${levelCount}/${words.length} cards`);
+  totalSynced += levelCount;
 }
 
 const afterTotal = countCards.get().count;
+const insertedThisRun = Math.max(0, afterTotal - beforeTotal);
 console.log(`\nSeed complete!`);
-console.log(`New cards inserted this run: ${totalInserted}`);
+console.log(`Cards synced this run: ${totalSynced}`);
+console.log(`New cards inserted this run: ${insertedThisRun}`);
 console.log(`Total cards in database: ${afterTotal}`);
-if (!shouldReset && totalInserted === 0 && afterTotal > 0) {
+if (!shouldReset && insertedThisRun === 0 && afterTotal > 0) {
   console.log('No new cards were inserted because the database is already seeded.');
   console.log('Use "npm run seed:reset" for a fresh rebuild.');
 }

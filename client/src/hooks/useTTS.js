@@ -105,7 +105,10 @@ function playWebSpeech(text, preferredVoiceName, speed) {
       const match = voices.find(v => v.name === preferredVoiceName);
       if (match) utter.voice = match;
     } else if (voices.length > 0) {
-      utter.voice = voices[0];
+      const preferredFemale = voices.find(v =>
+        /xiaoxiao|xiaoyi|female|woman|女|tingting|huihui|meijia/i.test(v.name)
+      );
+      utter.voice = preferredFemale || voices[0];
     }
 
     utter.onend = resolve;

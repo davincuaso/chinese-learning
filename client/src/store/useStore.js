@@ -65,6 +65,15 @@ export const useStore = create(
     }),
     {
       name: 'chinese-learning-prefs',
+      version: 2,
+      migrate: (persistedState, version) => {
+        const next = persistedState || {};
+        // One-time migration: move prior male defaults to female default.
+        if (version < 2 && (next.ttsVoice === 'zh-CN-YunxiNeural' || next.ttsVoice === 'zh-CN-YunjianNeural')) {
+          next.ttsVoice = 'zh-CN-XiaoxiaoNeural';
+        }
+        return next;
+      },
       partialize: (state) => ({
         darkMode: state.darkMode,
         batchSize: state.batchSize,

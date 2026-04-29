@@ -83,6 +83,7 @@ export default function StudyCard({ card, onRate, isNew }) {
                 {isNew && <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full font-medium">New</span>}
               </div>
               <div className="hanzi-large text-gray-900 dark:text-gray-100">{card.hanzi}</div>
+              <div className="text-lg font-medium text-gray-600 dark:text-gray-300 tracking-wide">{card.pinyin}</div>
               <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
                 Tap or press <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">Space</kbd> to reveal
               </p>
