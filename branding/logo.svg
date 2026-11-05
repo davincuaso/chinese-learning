@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 256 256" role="img" aria-labelledby="title desc"><title id="title">Chinese learning logo</title><desc id="desc">A study card carries the character 学, meaning to learn. Its strokes are outlined paths, so no font is required.</desc><rect width="256" height="256" fill="#B95343"/><path d="M69 64h111a13 13 0 0 1 13 13v114H82a13 13 0 0 1-13-13Z" fill="#E9BD78" transform="rotate(7 131 128)"/>
+      <rect x="64" y="51" width="124" height="151" rx="14" fill="#FFF3DC"/>
+      <g fill="none" stroke="#A84637" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m99 79 7 12m19-15 4 14m27-11-10 14M87 113v-12h76v12M106 120h39l-18 17v32c0 9-9 9-16 4M99 148h56"/>
+      </g><circle cx="169" cy="184" r="5" fill="#B95343"/></svg>
